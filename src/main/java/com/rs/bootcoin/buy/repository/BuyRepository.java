@@ -6,4 +6,5 @@ import reactor.core.publisher.Mono;
 
 public interface BuyRepository extends ReactiveMongoRepository<Buy, String> {
     Mono<Buy> findByCodeRequestBuy(String codeRequestBuy);
+
 }
