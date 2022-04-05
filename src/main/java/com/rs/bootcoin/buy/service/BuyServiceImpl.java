@@ -1,6 +1,7 @@
 package com.rs.bootcoin.buy.service;
 
 import com.rs.bootcoin.account.service.AccountService;
+import com.rs.bootcoin.buy.dto.ConfirmPayment;
 import com.rs.bootcoin.buy.dto.PaymentRequest;
 import com.rs.bootcoin.buy.entity.Buy;
 import com.rs.bootcoin.buy.message.producer.KafkaSender;
@@ -56,6 +57,23 @@ public class BuyServiceImpl implements BuyService{
                         return Mono.just(message);
                     });
                 });
+    }
+
+    @Override
+    public Mono<Void> processPaymentBootCoin(ConfirmPayment confirmPayment) {
+        var operationConfirm =  buyRepository.findByCodeRequestBuy(confirmPayment.getCodeRequestBuy())
+                .flatMap(request -> {
+                    request.setPaymentStatus(true);
+                    return accountService.findAccount(confirmPayment.getUserDocBuy())
+                            .map(account -> {
+                                account.setBalance(account.getBalance()+confirmPayment.getAmount());
+                                return account;
+                            })
+                            .flatMap(balanceUpdate -> accountService.saveAccount(balanceUpdate))
+                            .then(buyRepository.save(request));
+                    //return buyRepository.save(request);
+                });
+        return Mono.just(operationConfirm.block()).then();
     }
 
     Predicate<String> paymentMethod = (doc)-> doc.equals("yanki") || doc.equals("transfer");
