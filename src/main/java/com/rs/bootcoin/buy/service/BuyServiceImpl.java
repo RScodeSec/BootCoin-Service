@@ -26,8 +26,10 @@ public class BuyServiceImpl implements BuyService{
 
     @Override
     public Mono<Buy> buyRequest(Buy buy) {
-
-        if(paymentMethod.test(buy.getMethodPayment())){
+        /*
+         * They must have some payment method
+         */
+        if(paymentMethod.test(buy.getMethodPayment()) && buy.getAccountNumber()!= null){
            /*return accountService.findAccount(buy.getUserDocBuy())
                    .flatMap(balance -> {
                        if(balance.getBalance() >= buy.getAmount()){
