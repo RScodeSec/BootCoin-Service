@@ -1,6 +1,9 @@
 server:
-  port: 9092
+  port: 9093
 spring:
   data:
     mongodb:
       uri: mongodb+srv://admin:admin@cluster0.2zbex.mongodb.net/bootcoin?retryWrites=true&w=majority
+
+  kafka:
+    bootstrap-servers: localhost:9092
