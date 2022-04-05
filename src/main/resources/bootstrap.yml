@@ -1,0 +1,6 @@
+server:
+  port: 9092
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://admin:admin@cluster0.2zbex.mongodb.net/bootcoin?retryWrites=true&w=majority
